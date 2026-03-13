@@ -143,9 +143,7 @@ body.hov #cur{width:13px;height:13px}body.hov #ring{width:50px;height:50px;borde
 .scurl{font-size:.58rem;color:rgba(184,255,87,.5);letter-spacing:.06em;margin-bottom:12px}
 .scvisit{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(184,255,87,.25);color:var(--green);font-size:.6rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:100px;transition:background .2s,color .2s}
 .scvisit:hover{background:var(--green);color:#050505}
-.scdots{display:flex;justify-content:center;gap:6px;margin-top:20px;padding:0 56px}
-.scdot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.15);transition:background .3s,width .3s}
-.scdot.act{background:var(--green);width:20px;border-radius:2px}
+
 .sccm{flex:0 0 300px;height:380px;border-radius:14px;border:1px solid rgba(184,255,87,.12);background:radial-gradient(ellipse 80% 70% at 50% 50%,rgba(184,255,87,.05),transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;flex-shrink:0;padding:24px;text-align:center}
 .sccm-num{font-family:"Bebas Neue",sans-serif;font-size:4rem;line-height:1;color:var(--green);opacity:.25}
 .sccm-big{font-family:"Bebas Neue",sans-serif;font-size:1.5rem;line-height:.95;color:var(--white)}
@@ -188,8 +186,8 @@ body.hov #cur{width:13px;height:13px}body.hov #ring{width:50px;height:50px;borde
 .emwrap{max-width:720px}
 .emcard{background:var(--bg3);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .3s}
 .emcard:hover{border-color:rgba(255,209,102,.25)}
-.emiframe{width:100%;line-height:0;border-radius:14px 14px 0 0;overflow:hidden}
-.emiframe iframe{display:block;width:100%;height:560px;border:none}
+.emiframe{width:100%;line-height:0;border-radius:14px 14px 0 0;overflow:hidden;background:#e8e8e8}
+.emiframe iframe{display:block;width:100%;height:680px;border:none}
 .embody{padding:18px 20px}
 .emtag{font-size:.57rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .emname{font-family:"Bebas Neue",sans-serif;font-size:1.1rem;color:var(--white);margin-bottom:10px}
@@ -353,7 +351,6 @@ body.hov #cur{width:13px;height:13px}body.hov #ring{width:50px;height:50px;borde
   <div class="scwrap">
     <div class="sctrack" id="sctrack"></div>
   </div>
-  <div class="scdots" id="scdots"></div>
 </div>
 
 <section class="sec smid" id="services2">
@@ -544,7 +541,6 @@ loadJ('data/stats.json',function(d){
 loadJ('data/projects.json',function(d){
   var track=document.getElementById('sctrack');
   var section=document.getElementById('scshow');
-  var dotsWrap=document.getElementById('scdots');
   var countEl=document.getElementById('scshow-count');
   if(!track||!section)return;
   var items=d.items,VH=innerHeight,h='';
@@ -568,10 +564,7 @@ loadJ('data/projects.json',function(d){
     +'<div class="sccm-inner"><div class="sccm-big">More Coming<br>Soon</div>'
     +'<div class="sccm-sub">Showcase updated regularly</div></div></div>';
   track.innerHTML=h;
-  var dh='';
-  for(var i=0;i<items.length+1;i++)dh+='<div class="scdot'+(i===0?' act':'')+'"></div>';
-  dotsWrap.innerHTML=dh;
-  var dots=dotsWrap.querySelectorAll('.scdot');
+  var dots=[];
   var cards=track.querySelectorAll('.sccard,.sccm');
   track.querySelectorAll('.scvisit').forEach(hov);
   setTimeout(function(){
@@ -584,7 +577,7 @@ loadJ('data/projects.json',function(d){
       track.style.transform='translateX(-'+clamped+'px)';
       var CARD_W=316;
       var idx=Math.min(Math.round(clamped/CARD_W),items.length);
-      dots.forEach(function(dot,i){dot.classList.toggle('act',i===idx);});
+
     }
     addEventListener('scroll',upd,{passive:true});
     addEventListener('resize',function(){
@@ -656,7 +649,6 @@ loadJ('data/email.json',function(d){
   ifr.title='Email Campaign';
   ifr.setAttribute('frameborder','0');
   ifr.setAttribute('scrolling','no');
-  // Use srcdoc to embed directly - no same-origin issues
   ifr.srcdoc=document.getElementById('email-srcdoc').textContent;
   ifrDiv.appendChild(ifr);
   var bodyDiv=document.createElement('div');
@@ -664,6 +656,28 @@ loadJ('data/email.json',function(d){
   bodyDiv.innerHTML='<div class="emtag">'+e.tag+'</div><div class="emname">'+e.name+'</div><div class="emtools">'+tools+'</div>';
   card.appendChild(ifrDiv);
   card.appendChild(bodyDiv);
+
+  // Play only when section is visible, loop when done
+  var started=false;
+  var emObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting && !started){
+        started=true;
+        // Trigger animation start inside iframe
+        ifr.addEventListener('load',function(){
+          try{
+            var ifrWin=ifr.contentWindow;
+            if(ifrWin&&ifrWin.runSequence) ifrWin.runSequence();
+          }catch(e){}
+        });
+        // If already loaded
+        try{
+          if(ifr.contentWindow&&ifr.contentWindow.runSequence) ifr.contentWindow.runSequence();
+        }catch(e){}
+      }
+    });
+  },{threshold:0.3});
+  emObs.observe(wrap);
 });
 
 // EXPERIENCE
@@ -1019,7 +1033,7 @@ function autoScroll() {
       var pos=Math.floor(p*total);
       if(pos>=lastPos){ scroller.scrollTop=pos; lastPos=pos; }
       if(p<1){ scrollRaf=requestAnimationFrame(tick); }
-      else{ scroller.scrollTop=total; scrollRaf=null; showStep(4); setTimeout(runSequence,2000); }
+      else{ scroller.scrollTop=total; scrollRaf=null; showStep(4); setTimeout(runSequence,1800); }
     }
     scrollRaf=requestAnimationFrame(tick);
   },400);
@@ -1035,7 +1049,7 @@ function runSequence(){
   },1600);
 }
 
-window.onload=runSequence;
+// started by parent page when visible
 </script>
 </body>
 </html></textarea>
