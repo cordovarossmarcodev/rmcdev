@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GFI Email — Gmail Animation</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #e8e8e8; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: Arial, sans-serif; padding: 24px 0; }
+.scene { width: 500px; border-radius: 10px; overflow: hidden; border: 0.5px solid #ccc; position: relative; min-height: 580px; background: #fff; box-shadow: 0 8px 40px rgba(0,0,0,0.18); }
+
+#s-splash { position:absolute; inset:0; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; }
+.gmail-splash-logo { display:flex; align-items:center; gap:4px; font-size:42px; font-weight:300; letter-spacing:-1px; }
+.gl-G{color:#4285F4;} .gl-m{color:#EA4335;} .gl-a{color:#FBBC05;} .gl-i{color:#4285F4;} .gl-l{color:#34A853;}
+.splash-sub { font-size:13px; color:#5f6368; }
+.splash-bar { width:120px; height:3px; background:#e0e0e0; border-radius:2px; overflow:hidden; }
+.splash-progress { height:100%; width:0%; background:#4285F4; border-radius:2px; animation:loadBar 1.2s ease forwards; }
+@keyframes loadBar { 0%{width:0%} 60%{width:75%} 100%{width:100%} }
+
+#s-inbox { display:none; position:absolute; inset:0; flex-direction:column; background:#fff; }
+.gmail-topbar { background:#fff; border-bottom:1px solid #e0e0e0; padding:10px 14px; display:flex; align-items:center; gap:10px; }
+.gmail-topbar-logo { display:flex; align-items:center; gap:3px; font-size:20px; font-weight:300; letter-spacing:-0.5px; }
+.tl-G{color:#4285F4;} .tl-m{color:#EA4335;} .tl-a{color:#FBBC05;} .tl-i{color:#4285F4;} .tl-l{color:#34A853;}
+.gmail-search { flex:1; background:#eaf1fb; border:none; border-radius:24px; padding:7px 14px; font-size:12px; color:#444; outline:none; }
+.gmail-body { display:flex; flex:1; overflow:hidden; }
+.gmail-nav { width:52px; border-right:1px solid #f0f0f0; padding:8px 0; display:flex; flex-direction:column; align-items:center; gap:4px; flex-shrink:0; }
+.nav-ic { width:36px; height:28px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:14px; }
+.nav-ic.active { background:#fce8e6; }
+.gmail-list { flex:1; overflow:hidden; }
+.gmail-tabs { display:flex; border-bottom:1px solid #e0e0e0; font-size:12px; }
+.gtab { padding:9px 12px; color:#5f6368; border-bottom:2px solid transparent; white-space:nowrap; }
+.gtab.active { color:#1a73e8; border-bottom-color:#1a73e8; font-weight:500; }
+.erow { display:flex; align-items:center; padding:7px 10px; border-bottom:1px solid #f0f0f0; gap:8px; font-size:12px; color:#444; opacity:0.45; }
+.erow.unread { font-weight:700; color:#000; opacity:1; }
+.erow.highlight { background:#f2f6ff; border-left:3px solid #1a73e8; cursor:pointer; }
+.eavatar { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; flex-shrink:0; }
+.emeta { flex:1; min-width:0; }
+.esender { font-size:11px; }
+.esubject { font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.epreview { font-size:10px; color:#666; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:400; }
+.etime { font-size:10px; color:#5f6368; flex-shrink:0; font-weight:400; }
+.udot { width:7px; height:7px; border-radius:50%; background:#1a73e8; flex-shrink:0; }
+
+#s-open { display:none; position:absolute; inset:0; background:#fff; align-items:center; justify-content:center; flex-direction:column; gap:14px; }
+.env-wrap { animation:envPop 0.45s ease forwards; }
+@keyframes envPop { 0%{transform:scale(0.65);opacity:0;} 70%{transform:scale(1.08);opacity:1;} 100%{transform:scale(1);opacity:1;} }
+.open-label { font-size:12px; color:#5f6368; }
+
+#s-email { display:none; position:absolute; inset:0; flex-direction:column; overflow:hidden; }
+.echrome { background:#fff; border-bottom:1px solid #e0e0e0; padding:9px 12px; display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.eback { font-size:16px; color:#1a73e8; }
+.esubj { font-size:12px; font-weight:600; color:#202124; flex:1; }
+.efrom { font-size:10px; color:#5f6368; }
+.escroller { flex:1; overflow-y:auto; background:#0d1b2a; }
+.escroller::-webkit-scrollbar { display:none; }
+
+.gfi-topbar{background:#6abf45;padding:7px 18px;display:flex;justify-content:space-between;align-items:center;font-size:9px;font-weight:700;letter-spacing:0.08em;color:#0d2b0d;text-transform:uppercase;}
+.gfi-header{background:#162d47;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;}
+.gfi-logo-text{font-size:14px;font-weight:900;letter-spacing:0.04em;color:#fff;}
+.gfi-logo-text span{color:#6abf45;}
+.gfi-logo-sub{font-size:7px;letter-spacing:0.12em;color:#8a9bb0;margin-top:2px;text-transform:uppercase;}
+.gfi-offer-badge{background:#6abf45;padding:7px 12px;border-radius:4px;text-align:center;}
+.gfi-offer-label{font-size:7px;letter-spacing:0.1em;color:#0d2b0d;font-weight:700;text-transform:uppercase;}
+.gfi-offer-pct{font-size:17px;font-weight:900;color:#0d2b0d;line-height:1.1;}
+.gfi-hero{background:#0d1b2a;padding:26px 18px 22px;}
+.gfi-safety-badge{display:inline-flex;align-items:center;gap:5px;border:1px solid #6abf45;border-radius:3px;padding:3px 9px;font-size:8px;letter-spacing:0.12em;color:#6abf45;text-transform:uppercase;margin-bottom:14px;}
+.gfi-h1{font-size:30px;font-weight:900;color:#fff;line-height:1.05;letter-spacing:-0.5px;}
+.gfi-h1 span{color:#6abf45;}
+.gfi-body-text{font-size:11px;color:#8a9bb0;line-height:1.6;margin:12px 0 16px;}
+.gfi-body-text b{color:#fff;}
+.gfi-cta-row{display:flex;align-items:center;gap:12px;}
+.gfi-cta-btn{background:#6abf45;color:#0d2b0d;font-size:9px;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;padding:10px 18px;border-radius:3px;}
+.gfi-cta-link{font-size:10px;color:#8a9bb0;text-decoration:underline;}
+.gfi-promo-bar{background:#6abf45;padding:9px 18px;text-align:center;font-size:10px;font-weight:800;letter-spacing:0.1em;color:#0d2b0d;text-transform:uppercase;}
+.gfi-promo-bar span{background:#162d47;color:#fff;padding:2px 7px;border-radius:2px;margin:0 3px;}
+.gfi-light{background:#f0f5e8;padding:20px 18px;}
+.gfi-eyebrow{font-size:8px;letter-spacing:0.14em;color:#4a7a1e;text-transform:uppercase;margin-bottom:5px;font-weight:700;}
+.gfi-h2{font-size:17px;font-weight:900;color:#162d47;letter-spacing:0.02em;line-height:1.2;margin-bottom:7px;text-transform:uppercase;}
+.gfi-body-dark{font-size:11px;color:#3a4a5c;line-height:1.6;margin-bottom:12px;}
+.gfi-body-dark b{font-weight:700;}
+.gfi-stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #c8e0a0;border-radius:4px;overflow:hidden;}
+.gfi-stat{padding:9px 4px;text-align:center;border-right:1px solid #c8e0a0;}
+.gfi-stat:last-child{border-right:none;}
+.gfi-stat-num{font-size:13px;font-weight:900;color:#162d47;}
+.gfi-stat-num.g{color:#4a7a1e;}
+.gfi-stat-label{font-size:7px;letter-spacing:0.08em;color:#6a8a6a;text-transform:uppercase;margin-top:2px;}
+.gfi-dark{background:#162d47;padding:18px 18px 14px;}
+.gfi-picks-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;}
+.gfi-picks-title{font-size:13px;font-weight:900;color:#fff;letter-spacing:0.06em;text-transform:uppercase;}
+.gfi-picks-title span{color:#6abf45;}
+.gfi-picks-link{font-size:8px;color:#8a9bb0;letter-spacing:0.06em;text-transform:uppercase;}
+.gfi-pmain{background:#1e3a55;border-radius:4px;padding:12px;display:flex;gap:10px;margin-bottom:10px;}
+.gfi-picon{width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.gfi-pbody{flex:1;}
+.gfi-bs{display:inline-block;background:#6abf45;color:#0d2b0d;font-size:7px;font-weight:900;letter-spacing:0.1em;padding:2px 7px;border-radius:2px;margin-bottom:5px;text-transform:uppercase;}
+.gfi-pname{font-size:12px;font-weight:900;color:#fff;text-transform:uppercase;line-height:1.2;margin-bottom:3px;}
+.gfi-pdesc{font-size:9px;color:#8a9bb0;line-height:1.5;margin-bottom:6px;}
+.gfi-check{font-size:9px;color:#6abf45;margin-bottom:2px;}
+.gfi-order{display:inline-block;background:#6abf45;color:#0d2b0d;font-size:8px;font-weight:900;letter-spacing:0.1em;padding:6px 12px;border-radius:3px;margin-top:7px;text-transform:uppercase;}
+.gfi-pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:7px;}
+.gfi-pcard{background:#1e3a55;border-radius:4px;padding:9px 7px;}
+.gfi-cicon{font-size:18px;margin-bottom:5px;}
+.gfi-cbadge{display:inline-block;background:#6abf45;color:#0d2b0d;font-size:6px;font-weight:900;letter-spacing:0.08em;padding:2px 5px;border-radius:2px;margin-bottom:5px;text-transform:uppercase;}
+.gfi-cname{font-size:9px;font-weight:900;color:#fff;text-transform:uppercase;line-height:1.3;margin-bottom:3px;}
+.gfi-cdesc{font-size:8px;color:#8a9bb0;line-height:1.4;margin-bottom:7px;}
+.gfi-cbtn{font-size:7px;font-weight:700;color:#6abf45;letter-spacing:0.08em;border:1px solid #6abf45;padding:3px 7px;border-radius:2px;text-transform:uppercase;display:inline-block;}
+.gfi-test-sec{background:#f0f5e8;padding:20px 18px;}
+.gfi-test-title{font-size:13px;font-weight:900;color:#162d47;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px;}
+.gfi-test-title span{color:#4a7a1e;}
+.gfi-testimonial{border-left:3px solid #6abf45;padding:10px 12px;background:#fff;border-radius:0 4px 4px 0;margin-bottom:9px;}
+.gfi-stars{color:#4a7a1e;font-size:11px;margin-bottom:5px;}
+.gfi-quote{font-size:10px;color:#2a3a4c;line-height:1.6;font-style:italic;margin-bottom:5px;}
+.gfi-attr{font-size:8px;color:#6a8a6a;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;}
+.gfi-feat-sec{background:#0d1b2a;padding:18px;}
+.gfi-feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.gfi-feat{display:flex;gap:9px;align-items:flex-start;}
+.gfi-feat-ic{font-size:15px;flex-shrink:0;margin-top:1px;}
+.gfi-feat-title{font-size:10px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;}
+.gfi-feat-desc{font-size:9px;color:#8a9bb0;line-height:1.5;}
+.gfi-fcta{background:#6abf45;padding:26px 18px;text-align:center;}
+.gfi-fcta-eye{font-size:8px;letter-spacing:0.14em;color:#1a4a0a;text-transform:uppercase;margin-bottom:7px;font-weight:700;}
+.gfi-fcta-h{font-size:24px;font-weight:900;color:#0d2b0d;line-height:1.1;margin-bottom:9px;letter-spacing:-0.5px;}
+.gfi-fcta-body{font-size:10px;color:#1a4a0a;line-height:1.6;margin-bottom:14px;}
+.gfi-fcta-body b{font-weight:900;}
+.gfi-browse{background:#162d47;color:#fff;font-size:9px;font-weight:900;letter-spacing:0.1em;padding:12px 26px;border-radius:3px;display:inline-block;text-transform:uppercase;margin-bottom:10px;}
+.gfi-trust{font-size:9px;color:#1a4a0a;}
+.gfi-footer{background:#0d1b2a;padding:16px 18px;display:flex;justify-content:space-between;align-items:flex-start;}
+.gfi-flogo{font-size:10px;font-weight:900;color:#5f7a6a;letter-spacing:0.1em;text-transform:uppercase;}
+.gfi-flogo span{color:#6abf45;}
+.gfi-flinks{font-size:9px;color:#5f7a6a;text-align:right;line-height:1.9;}
+
+#s-end { display:none; position:absolute; inset:0; background:#fff; align-items:center; justify-content:center; flex-direction:column; gap:8px; }
+.end-check { width:48px; height:48px; border-radius:50%; background:#e8f5d8; display:flex; align-items:center; justify-content:center; margin-bottom:6px; }
+.end-title { font-size:15px; font-weight:600; color:#202124; }
+.end-sub { font-size:12px; color:#5f6368; }
+.replay-btn { margin-top:16px; padding:9px 22px; border:1px solid #ccc; border-radius:20px; font-size:12px; background:transparent; color:#202124; cursor:pointer; font-family:Arial,sans-serif; }
+.replay-btn:hover { background:#f5f5f5; }
+
+.progress-dots { display:flex; gap:6px; justify-content:center; padding:14px 0 6px; }
+.dot { width:5px; height:5px; border-radius:50%; background:#ccc; transition:all 0.2s; }
+.dot.active { background:#4285F4; width:16px; border-radius:3px; }
+.fade-in { animation:fadeIn 0.25s ease forwards; }
+.slide-up { animation:slideUp 0.25s ease forwards; }
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<div class="scene" id="mainScene">
+
+  <div id="s-splash">
+    <div class="gmail-splash-logo"><span class="gl-G">G</span><span class="gl-m">m</span><span class="gl-a">a</span><span class="gl-i">i</span><span class="gl-l">l</span></div>
+    <div class="splash-sub">Signing you in...</div>
+    <div class="splash-bar"><div class="splash-progress"></div></div>
+  </div>
+
+  <div id="s-inbox">
+    <div class="gmail-topbar">
+      <div class="gmail-topbar-logo"><span class="tl-G">G</span><span class="tl-m">m</span><span class="tl-a">a</span><span class="tl-i">i</span><span class="tl-l">l</span></div>
+      <input class="gmail-search" value="Search mail" readonly />
+      <div style="width:28px;height:28px;border-radius:50%;background:#4285F4;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700;flex-shrink:0;">U</div>
+    </div>
+    <div class="gmail-body">
+      <div class="gmail-nav">
+        <div class="nav-ic active">✉</div>
+        <div class="nav-ic">⭐</div>
+        <div class="nav-ic">🕐</div>
+        <div class="nav-ic">📤</div>
+        <div class="nav-ic">📁</div>
+      </div>
+      <div class="gmail-list">
+        <div class="gmail-tabs">
+          <div class="gtab active">Primary</div>
+          <div class="gtab">Promotions</div>
+          <div class="gtab">Social</div>
+        </div>
+        <div class="erow unread highlight" id="gfiRow">
+          <div class="udot"></div>
+          <div class="eavatar" style="background:#0d5c2e;">G</div>
+          <div class="emeta">
+            <div class="esender">GFI &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="10797e767f507776793e7e7564">[email&#160;protected]</a>&gt;</div>
+            <div class="esubject">Is Your Facility Actually Protected? 🔒</div>
+            <div class="epreview">FREE SHIPPING ON ORDERS OVER $500 · 15% OFF with code GFI15</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+            <div class="etime">4:03 AM</div>
+            <div style="font-size:8px;background:#6abf45;color:#0d2b0d;padding:1px 5px;border-radius:8px;font-weight:700;">NEW</div>
+          </div>
+        </div>
+        <div class="erow"><div class="eavatar" style="background:#24292e;">GH</div><div class="emeta"><div class="esender">GitHub</div><div class="esubject">Your pull request was merged</div><div class="epreview">feat: update dashboard layout</div></div><div class="etime">2h</div></div>
+        <div class="erow"><div class="eavatar" style="background:#0077b5;">in</div><div class="emeta"><div class="esender">LinkedIn</div><div class="esubject">3 new profile views this week</div><div class="epreview">See who's been looking at your profile</div></div><div class="etime">Yesterday</div></div>
+        <div class="erow"><div class="eavatar" style="background:#ea4335;">G</div><div class="emeta"><div class="esender">Google Workspace</div><div class="esubject">Your storage is 80% full</div><div class="epreview">Upgrade your Google One plan</div></div><div class="etime">Mar 12</div></div>
+        <div class="erow"><div class="eavatar" style="background:#6c6c6c;">N</div><div class="emeta"><div class="esender">Notion</div><div class="esubject">Weekly digest: your team's activity</div><div class="epreview">5 pages edited, 2 new databases</div></div><div class="etime">Mar 11</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="s-open">
+    <div class="env-wrap">
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+        <rect x="6" y="18" width="60" height="42" rx="5" fill="#e8f5d8" stroke="#6abf45" stroke-width="1.5"/>
+        <path d="M6 22 L36 44 L66 22" stroke="#4a7a1e" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <rect x="24" y="8" width="24" height="16" rx="3" fill="#6abf45"/>
+        <text x="36" y="20" text-anchor="middle" font-size="10" font-weight="900" fill="#0d2b0d">GFI</text>
+      </svg>
+    </div>
+    <div class="open-label">Opening email...</div>
+  </div>
+
+  <div id="s-email">
+    <div class="echrome">
+      <div class="eback">‹</div>
+      <div style="flex:1;"><div class="esubj">Is Your Facility Actually Protected?</div><div class="efrom">GFI &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="41282f272e012627286f2f2435">[email&#160;protected]</a>&gt; · Mar 13, 2026, 4:03 AM</div></div>
+      <div style="font-size:14px;color:#5f6368;">⋮</div>
+    </div>
+    <div class="escroller" id="emailScroller">
+      <div>
+        <div class="gfi-topbar"><div>🚚 FREE SHIPPING ON ORDERS OVER $500</div><div style="font-size:9px;color:#1a3a0a;">View in Browser →</div></div>
+        <div class="gfi-header"><div><div class="gfi-logo-text">GLOBAL <span>FURNISHINGS</span></div><div class="gfi-logo-sub">INC. — Safety &amp; Lab Solutions Since 2005</div></div><div class="gfi-offer-badge"><div class="gfi-offer-label">Limited Offer</div><div class="gfi-offer-pct">15% OFF</div></div></div>
+        <div class="gfi-hero">
+          <div class="gfi-safety-badge">⚠ Safety is not optional</div>
+          <div class="gfi-h1">ONE THREAT.<br><span>ZERO<br>CHANCES.</span></div>
+          <div class="gfi-body-text">Every day, facilities across the country operate without adequate ballistic protection — <b>until it's too late.</b> Global Furnishings Inc. delivers <b>UL-certified, field-proven</b> bullet-resistant solutions.</div>
+          <div class="gfi-cta-row"><div class="gfi-cta-btn">SHOP PROTECTION NOW →</div><div class="gfi-cta-link">Request a Quote</div></div>
+        </div>
+        <div class="gfi-promo-bar">⏰ USE CODE <span>GFI15</span> — OFFER EXPIRES IN 72 HOURS</div>
+        <div class="gfi-light">
+          <div class="gfi-eyebrow">Why it can't wait</div>
+          <div class="gfi-h2">IS YOUR FACILITY<br>ACTUALLY PROTECTED?</div>
+          <div class="gfi-body-dark">Standard walls, doors, and windows offer <b>zero protection</b> against ballistic threats. Whether you manage a school, courthouse, bank, hospital, or corporate office — if your entry points aren't reinforced, your people are exposed. <b>Don't wait for an incident to take action.</b></div>
+          <div class="gfi-stats"><div class="gfi-stat"><div class="gfi-stat-num">UL752</div><div class="gfi-stat-label">Certified Standards</div></div><div class="gfi-stat"><div class="gfi-stat-num g">20+</div><div class="gfi-stat-label">Years of Trust</div></div><div class="gfi-stat"><div class="gfi-stat-num g">500+</div><div class="gfi-stat-label">Products Available</div></div><div class="gfi-stat"><div class="gfi-stat-num g">5★</div><div class="gfi-stat-label">Average Rating</div></div></div>
+        </div>
+        <div class="gfi-dark">
+          <div class="gfi-picks-hd"><div class="gfi-picks-title">TOP <span>PICKS</span> THIS MONTH</div><div class="gfi-picks-link">VIEW ALL 1,300+ →</div></div>
+          <div class="gfi-pmain"><div class="gfi-picon"><svg width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M24 4L36 10L36 28C36 36 24 44 24 44C24 44 12 36 12 28L12 10Z" fill="#1e5a8a" stroke="#6abf45" stroke-width="1.5"/><path d="M24 12L31 16L31 28C31 34 24 38 24 38C24 38 17 34 17 28L17 16Z" fill="#6abf45" opacity="0.3"/></svg></div><div class="gfi-pbody"><div class="gfi-bs">★ BEST SELLER</div><div class="gfi-pname">BULLET RESISTANT<br>WALL PANEL | UL752</div><div class="gfi-pdesc">The #1 choice for facility managers needing certified ballistic-rated wall protection.</div><div class="gfi-check">✓ UL752 certified — industry gold standard</div><div class="gfi-check">✓ Installs over existing drywall</div><div class="gfi-check">✓ Commercial &amp; government approved</div><div class="gfi-order">ORDER NOW →</div></div></div>
+          <div class="gfi-pgrid"><div class="gfi-pcard"><div class="gfi-cicon">🚪</div><div class="gfi-cbadge">UL LEVEL 3</div><div class="gfi-cname">BULLET RESISTANT WOOD DOOR</div><div class="gfi-cdesc">Looks standard. Stops threats.</div><div class="gfi-cbtn">GET PRICING →</div></div><div class="gfi-pcard"><div class="gfi-cicon">🏠</div><div class="gfi-cbadge">SAFEHOME™</div><div class="gfi-cname">SAFEHOME™ DOOR KIT</div><div class="gfi-cdesc">Complete bullet-resistant door system.</div><div class="gfi-cbtn">GET PRICING →</div></div><div class="gfi-pcard"><div class="gfi-cicon">📋</div><div class="gfi-cbadge">SAFESHUTTER™</div><div class="gfi-cname">SAFESHUTTER™ WHITEBOARD</div><div class="gfi-cdesc">Doubles as a classroom shield.</div><div class="gfi-cbtn">GET PRICING →</div></div></div>
+          <div class="gfi-pgrid"><div class="gfi-pcard"><div class="gfi-cicon">📐</div><div class="gfi-cbadge" style="background:#fff;color:#0d2b0d;">NEW</div><div class="gfi-cname">BATTEN STRIPS</div><div class="gfi-cdesc">Upgrade any wall to ballistic grade instantly.</div><div class="gfi-cbtn">GET PRICING →</div></div><div class="gfi-pcard"><div class="gfi-cicon">🔲</div><div class="gfi-cbadge">SAFESLIDEOUT™</div><div class="gfi-cname">CONCEALED SLIDER</div><div class="gfi-cdesc">Deploys instantly in emergencies.</div><div class="gfi-cbtn">GET PRICING →</div></div><div class="gfi-pcard"><div class="gfi-cicon">🪟</div><div class="gfi-cbadge" style="background:#fff;color:#0d2b0d;">POPULAR</div><div class="gfi-cname">WOOD WINDOW / SIDELITE</div><div class="gfi-cdesc">Looks completely natural.</div><div class="gfi-cbtn">GET PRICING →</div></div></div>
+        </div>
+        <div class="gfi-test-sec">
+          <div class="gfi-test-title">TRUSTED BY <span>FACILITIES NATIONWIDE</span></div>
+          <div class="gfi-testimonial"><div class="gfi-stars">★★★★★</div><div class="gfi-quote">"After our security audit, we needed certified ballistic panels fast. Global Furnishings had exactly what we needed, and installation was seamless. Our staff finally feels safe."</div><div class="gfi-attr">Director of Operations — K-12 School District, TX</div></div>
+          <div class="gfi-testimonial"><div class="gfi-stars">★★★★★</div><div class="gfi-quote">"The SafeHome Door Kit exceeded our expectations. You'd never know it was bullet-resistant — it looks like a normal door. That's exactly what we needed."</div><div class="gfi-attr">VP of Facilities — Regional Credit Union, OH</div></div>
+        </div>
+        <div class="gfi-feat-sec">
+          <div class="gfi-feat-grid">
+            <div class="gfi-feat"><div class="gfi-feat-ic">🥇</div><div><div class="gfi-feat-title">UL752 Certified</div><div class="gfi-feat-desc">Every product meets or exceeds UL752 — the industry benchmark.</div></div></div>
+            <div class="gfi-feat"><div class="gfi-feat-ic">⚡</div><div><div class="gfi-feat-title">Fast Turnaround</div><div class="gfi-feat-desc">Most orders ship within 5–10 business days.</div></div></div>
+            <div class="gfi-feat"><div class="gfi-feat-ic">🔧</div><div><div class="gfi-feat-title">Easy Installation</div><div class="gfi-feat-desc">Retrofits into existing structures with minimal disruption.</div></div></div>
+            <div class="gfi-feat"><div class="gfi-feat-ic">🤝</div><div><div class="gfi-feat-title">Expert Support</div><div class="gfi-feat-desc">Our team helps you choose the right threat level.</div></div></div>
+          </div>
+        </div>
+        <div class="gfi-fcta">
+          <div class="gfi-fcta-eye">Don't wait for a wake-up call</div>
+          <div class="gfi-fcta-h">PROTECT YOUR<br>PEOPLE TODAY.</div>
+          <div class="gfi-fcta-body">Over 1,300 products. UL-certified. Ready to ship. Use code <b>GFI15</b> for 15% off — expires in 72 hours.</div>
+          <div class="gfi-browse">BROWSE ALL PRODUCTS →</div><br>
+          <div class="gfi-trust">🔒 Secure Checkout &nbsp;|&nbsp; Satisfaction Guaranteed &nbsp;|&nbsp; Expert Support</div>
+        </div>
+        <div class="gfi-footer"><div class="gfi-flogo">GLOBAL <span>FURNISHINGS</span> INC.</div><div class="gfi-flinks"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6a03040c052a0d0605080b060c1f180403190203040d1903040944090507">[email&#160;protected]</a><br>globalfurnishingsinc.com</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="s-end">
+    <div class="end-check"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 11l4 4 8-8" stroke="#4a7a1e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="end-title">Full email sequence complete</div>
+    <div class="end-sub">Ready to screen-record for GIF export</div>
+    <button class="replay-btn" id="replayBtn">↺ Replay animation</button>
+  </div>
+
+</div>
+
+<div class="progress-dots">
+  <div class="dot active" id="d0"></div>
+  <div class="dot" id="d1"></div>
+  <div class="dot" id="d2"></div>
+  <div class="dot" id="d3"></div>
+  <div class="dot" id="d4"></div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const stepIds = ['s-splash','s-inbox','s-open','s-email','s-end'];
+const dots = [0,1,2,3,4].map(i => document.getElementById('d'+i));
+let current = 0, scrollRaf = null;
+
+function showStep(n) {
+  stepIds.forEach(id => { document.getElementById(id).style.display = 'none'; });
+  dots.forEach((d,i) => { d.className = 'dot'+(i===n?' active':''); });
+  const el = document.getElementById(stepIds[n]);
+  el.style.display = 'flex';
+  el.style.flexDirection = 'column';
+  el.classList.remove('fade-in','slide-up');
+  void el.offsetWidth;
+  el.classList.add(n===0?'fade-in':'slide-up');
+  current = n;
+}
+
+function autoScroll() {
+  const scroller = document.getElementById('emailScroller');
+  scroller.scrollTop = 0;
+  if (scrollRaf) { cancelAnimationFrame(scrollRaf); scrollRaf = null; }
+  setTimeout(() => {
+    const total = scroller.scrollHeight - scroller.clientHeight;
+    if (total <= 0) { setTimeout(() => showStep(4), 500); return; }
+    const duration = 12000;
+    let startTime = null, lastPos = 0;
+    function tick(ts) {
+      if (!startTime) startTime = ts;
+      const p = Math.min((ts - startTime) / duration, 1);
+      const pos = Math.floor(p * total);
+      if (pos >= lastPos) { scroller.scrollTop = pos; lastPos = pos; }
+      if (p < 1) { scrollRaf = requestAnimationFrame(tick); }
+      else { scroller.scrollTop = total; scrollRaf = null; setTimeout(() => showStep(4), 800); }
+    }
+    scrollRaf = requestAnimationFrame(tick);
+  }, 400);
+}
+
+function runSequence() {
+  if (scrollRaf) { cancelAnimationFrame(scrollRaf); scrollRaf = null; }
+  showStep(0);
+  setTimeout(() => showStep(1), 1600
