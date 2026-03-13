@@ -131,40 +131,38 @@ body.hov #cur{width:13px;height:13px}body.hov #ring{width:50px;height:50px;borde
 .tbadge.du{background:rgba(255,120,73,.1);border:1px solid rgba(255,120,73,.3);color:#ff7849}
 .tbadge.nt{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#aaa}
 /* SHOWCASE */
-.scshowcase{position:relative;background:var(--bg)}
-.scsticky{position:sticky;top:0;height:100vh;overflow:hidden}
-.sctrack{display:flex;height:100vh;will-change:transform}
-.sccard{flex:0 0 100vw;height:100vh;position:relative;overflow:hidden}
-.scbg{position:absolute;inset:0;background:var(--bg2)}
-.scbg img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:brightness(.3) saturate(.6);transition:filter 1.2s var(--eo),transform 1.4s var(--eo);transform:scale(1.06)}
-.sccard.act .scbg img{filter:brightness(.6) saturate(.9);transform:scale(1)}
-.scgrad{position:absolute;inset:0;background:linear-gradient(to right,rgba(5,5,5,.97) 0%,rgba(5,5,5,.65) 45%,rgba(5,5,5,.1) 80%,transparent 100%)}
-.scgradb{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,5,.85) 0%,transparent 55%)}
-.scbody{position:absolute;top:50%;left:72px;transform:translateY(calc(-50% + 24px));transition:transform .9s var(--eo),opacity .9s var(--eo);opacity:0;max-width:580px}
-.sccard.act .scbody{transform:translateY(-50%);opacity:1}
-.scnum{font-family:"Bebas Neue",sans-serif;font-size:.75rem;letter-spacing:.3em;color:var(--green);opacity:.55;margin-bottom:14px}
-.scname{font-family:"Bebas Neue",sans-serif;font-size:clamp(3rem,6vw,7.5rem);line-height:.88;color:var(--white);margin-bottom:14px}
-.scurl{font-size:.72rem;letter-spacing:.1em;color:rgba(184,255,87,.45);margin-bottom:28px}
-.scvisit{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(184,255,87,.3);color:var(--green);font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:10px 22px;border-radius:100px;transition:background .25s,color .25s}
+.scshowcase{position:relative;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:72px 0}
+.scshow-hdr{max-width:1260px;margin:0 auto;padding:0 56px;display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px;flex-wrap:wrap;gap:16px}
+.scshow-title{font-family:"Bebas Neue",sans-serif;font-size:clamp(1.8rem,3vw,2.8rem);color:var(--white);line-height:.9}
+.scshow-count{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.scsticky{position:sticky;top:50%;transform:translateY(-50%)}
+.scwrap{position:sticky;top:calc(50% - 220px);height:440px;overflow:hidden}
+.sctrack{display:flex;gap:20px;height:400px;padding:0 56px;will-change:transform;transition:transform .05s linear}
+/* Cards */
+.sccard{flex:0 0 320px;height:400px;position:relative;overflow:hidden;border-radius:16px;border:1px solid var(--border);background:var(--bg3);transition:border-color .4s,box-shadow .4s;cursor:none}
+.sccard:hover{border-color:rgba(184,255,87,.25);box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.scbg{position:absolute;inset:0}
+.scbg img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:brightness(.5) saturate(.8);transition:filter .6s var(--eo),transform .8s var(--eo);transform:scale(1.04)}
+.sccard:hover .scbg img{filter:brightness(.7) saturate(1);transform:scale(1)}
+.scbg-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg3)}
+.scbg-ph span{font-family:"Bebas Neue",sans-serif;font-size:1.4rem;color:rgba(255,255,255,.06);letter-spacing:.1em;text-align:center;padding:20px}
+.scgrad{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,5,.95) 0%,rgba(5,5,5,.4) 50%,transparent 100%)}
+.scbody{position:absolute;bottom:0;left:0;right:0;padding:22px 20px;transform:translateY(6px);transition:transform .4s var(--eo)}
+.sccard:hover .scbody{transform:translateY(0)}
+.scnum{font-size:.58rem;letter-spacing:.2em;color:var(--green);opacity:.6;margin-bottom:6px}
+.scname{font-family:"Bebas Neue",sans-serif;font-size:1.5rem;line-height:.95;color:var(--white);margin-bottom:5px}
+.scurl{font-size:.6rem;color:rgba(184,255,87,.5);letter-spacing:.08em;margin-bottom:14px}
+.scvisit{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(184,255,87,.25);color:var(--green);font-size:.62rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:6px 14px;border-radius:100px;transition:background .2s,color .2s}
 .scvisit:hover{background:var(--green);color:#050505}
-/* No-image placeholder for showcase */
-.scbg-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-.scbg-ph span{font-family:"Bebas Neue",sans-serif;font-size:clamp(2rem,4vw,4rem);color:rgba(255,255,255,.04);letter-spacing:.1em}
-/* Dots */
-.scdots{position:absolute;right:52px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:20}
-.scdot{width:3px;height:3px;border-radius:2px;background:rgba(255,255,255,.2);transition:background .4s,height .4s}
-.scdot.act{background:var(--green);height:20px}
 /* Progress */
-.scprog{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,.05)}
+.scprog-wrap{max-width:1260px;margin:28px auto 0;padding:0 56px}
+.scprog{height:2px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
 .scfill{height:100%;background:var(--green);width:0%;transition:width .08s linear}
-/* Coming soon */
-.sccm{flex:0 0 100vw;height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.sccm-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(184,255,87,.05),transparent)}
-.sccm-num{font-family:"Bebas Neue",sans-serif;font-size:clamp(10rem,22vw,22rem);line-height:1;color:var(--green);opacity:.07;position:absolute;user-select:none}
-.sccm-inner{position:relative;text-align:center}
-.sccm-big{font-family:"Bebas Neue",sans-serif;font-size:clamp(3rem,7vw,8rem);line-height:.9;color:var(--white);margin-bottom:14px}
-.sccm-sub{font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--m2);line-height:1.9}
-.sccm-pill{display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:rgba(184,255,87,.06);border:1px solid rgba(184,255,87,.2);padding:8px 20px;border-radius:100px;font-size:.68rem;color:var(--green);letter-spacing:.1em;text-transform:uppercase}
+/* Coming soon card */
+.sccm{flex:0 0 320px;height:400px;border-radius:16px;border:1px solid rgba(184,255,87,.12);background:radial-gradient(ellipse 80% 70% at 50% 50%,rgba(184,255,87,.05),rgba(5,5,5,0));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;flex-shrink:0}
+.sccm-num{font-family:"Bebas Neue",sans-serif;font-size:5rem;line-height:1;color:var(--green);opacity:.2}
+.sccm-big{font-family:"Bebas Neue",sans-serif;font-size:1.6rem;line-height:.95;color:var(--white);text-align:center}
+.sccm-sub{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-align:center;line-height:1.7}
 /* PC CARDS */
 .pc{display:block;background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform .4s var(--eo),border-color .3s,box-shadow .35s;cursor:none}
 .pc:hover{transform:translateY(-7px);border-color:rgba(184,255,87,.2);box-shadow:0 20px 50px rgba(0,0,0,.6)}
@@ -384,11 +382,14 @@ body.hov #cur{width:13px;height:13px}body.hov #ring{width:50px;height:50px;borde
 </section>
 
 <div class="scshowcase" id="scshow">
-  <div class="scsticky">
-    <div class="sctrack" id="sctrack"></div>
-    <div class="scdots" id="scdots"></div>
-    <div class="scprog"><div class="scfill" id="scfill"></div></div>
+  <div class="scshow-hdr rv">
+    <div class="scshow-title">Project Showcase</div>
+    <div class="scshow-count" id="scshow-count"></div>
   </div>
+  <div class="scwrap">
+    <div class="sctrack" id="sctrack"></div>
+  </div>
+  <div class="scprog-wrap"><div class="scprog"><div class="scfill" id="scfill"></div></div></div>
 </div>
 
 <section class="sec smid" id="services2">
@@ -599,19 +600,26 @@ loadJ('data/stats.json',function(d){
 // SHOWCASE
 loadJ('data/projects.json',function(d){
   var track=document.getElementById('sctrack');
+  var wrap=document.querySelector('.scwrap');
   var section=document.getElementById('scshow');
   var fill=document.getElementById('scfill');
-  var dotsWrap=document.getElementById('scdots');
+  var countEl=document.getElementById('scshow-count');
   if(!track||!section)return;
-  var items=d.items,total=items.length+1,VH=innerHeight,h='';
 
+  var items=d.items;
+  var CARD_W=340; // card width + gap
+  if(countEl)countEl.textContent=items.length+' Projects';
+
+  var h='';
   items.forEach(function(p,i){
     var num=String(i+1).padStart(2,'0');
     var domain=p.url.replace(/https?:\/\//,'').replace(/\/.*/,'');
-    var imgH=p.img?'<img src="'+p.img+'" alt="'+p.name+'" loading="lazy">':'<div class="scbg-ph"><span>'+p.name+'</span></div>';
-    h+='<div class="sccard" data-i="'+i+'">'
+    var imgH=p.img
+      ?'<img src="'+p.img+'" alt="'+p.name+'" loading="lazy">'
+      :'<div class="scbg-ph"><span>'+p.name+'</span></div>';
+    h+='<div class="sccard">'
         +'<div class="scbg">'+imgH+'</div>'
-        +'<div class="scgrad"></div><div class="scgradb"></div>'
+        +'<div class="scgrad"></div>'
         +'<div class="scbody">'
           +'<div class="scnum">'+num+'</div>'
           +'<div class="scname">'+p.name+'</div>'
@@ -620,39 +628,42 @@ loadJ('data/projects.json',function(d){
         +'</div>'
       +'</div>';
   });
+  // Coming soon last card
   h+='<div class="sccm">'
-      +'<div class="sccm-bg"></div>'
       +'<div class="sccm-num">60+</div>'
-      +'<div class="sccm-inner">'
-        +'<div class="sccm-big">More Coming<br>Soon</div>'
-        +'<div class="sccm-sub">Showcase continuously updated<br>as new projects are completed</div>'
-        +'<div class="sccm-pill">&#43; Projects Added Regularly</div>'
-      +'</div>'
+      +'<div class="sccm-big">More<br>Coming<br>Soon</div>'
+      +'<div class="sccm-sub">Updated regularly</div>'
     +'</div>';
   track.innerHTML=h;
+  track.querySelectorAll('.sccard').forEach(hov);
 
-  // Dots
-  var dh='';for(var i=0;i<total;i++)dh+='<div class="scdot'+(i===0?' act':'')+'"></div>';
-  dotsWrap.innerHTML=dh;
-  var dots=dotsWrap.querySelectorAll('.scdot');
-  var cards=track.querySelectorAll('.sccard,.sccm');
-  section.style.height=(total*VH+VH)+'px';
-  if(cards[0])cards[0].classList.add('act');
+  // Total scrollable width of track minus viewport
+  var totalCards=items.length+1;
+  var scrollDistance=totalCards*CARD_W;
+
+  // Set section height to drive scroll amount
+  section.style.height=(scrollDistance+innerHeight)+'px';
 
   function upd(){
     var rect=section.getBoundingClientRect();
     var scrolled=Math.max(0,-rect.top);
-    var maxS=total*VH;
-    track.style.transform='translateX(-'+Math.min(scrolled,track.scrollWidth-innerWidth)+'px)';
-    if(fill)fill.style.width=(Math.min(scrolled/maxS,1)*100)+'%';
-    var idx=Math.min(Math.floor(scrolled/VH),total-1);
-    cards.forEach(function(c,i){c.classList.toggle('act',i===idx);});
-    dots.forEach(function(d,i){d.classList.toggle('act',i===idx);});
+    var maxScroll=scrollDistance;
+    var clamped=Math.min(scrolled,maxScroll);
+
+    // Move track horizontally
+    track.style.transform='translateX(-'+clamped+'px)';
+
+    // Progress bar
+    if(fill)fill.style.width=(Math.min(clamped/maxScroll,1)*100)+'%';
   }
+
   addEventListener('scroll',upd,{passive:true});
-  addEventListener('resize',function(){VH=innerHeight;section.style.height=(total*VH+VH)+'px';upd();});
+  addEventListener('resize',function(){
+    scrollDistance=(items.length+1)*CARD_W;
+    section.style.height=(scrollDistance+innerHeight)+'px';
+    upd();
+  });
   upd();
-  track.querySelectorAll('.scvisit').forEach(hov);
 });
 
 // SEO
