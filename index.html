@@ -718,12 +718,10 @@ loadJ('data/email.json',function(d){
   var wrap=document.getElementById('emwrap'),h='';
   d.items.forEach(function(e){
     var tools=(e.tools||[]).map(function(t){return '<span class="emtool">'+t+'</span>';}).join('');
-    if(e.iframe){
-      h+='<div class="emcard">'
-          +'<div class="emiframe"><iframe src="'+e.iframe+'" title="Email Campaign" frameborder="0" allow="clipboard-write" allowfullscreen loading="lazy"></iframe></div>'
-          +'<div class="embody"><div class="emtag">'+e.tag+'</div><div class="emname">'+e.name+'</div><div class="emtools">'+tools+'</div></div>'
-        +'</div>';
-    }
+    h+='<div class="emcard">'
+        +'<div class="emiframe"><iframe src="email-campaign.html" title="Email Campaign Design" frameborder="0" scrolling="no"></iframe></div>'
+        +'<div class="embody"><div class="emtag">'+e.tag+'</div><div class="emname">'+e.name+'</div><div class="emtools">'+tools+'</div></div>'
+      +'</div>';
   });
   wrap.innerHTML=h;
 });
