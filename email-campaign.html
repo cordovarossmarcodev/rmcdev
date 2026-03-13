@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>GFI Email — Gmail Animation</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; background: #e8e8e8; display: flex; align-items: center; justify-content: center; font-family: Arial, sans-serif; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #e8e8e8; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: Arial, sans-serif; padding: 24px 0; }
 .scene { width: 500px; border-radius: 10px; overflow: hidden; border: 0.5px solid #ccc; position: relative; min-height: 580px; background: #fff; box-shadow: 0 8px 40px rgba(0,0,0,0.18); }
@@ -146,7 +147,6 @@ body { background: #e8e8e8; display: flex; flex-direction: column; align-items: 
 </style>
 </head>
 <body>
-
 <div class="scene" id="mainScene">
 
   <div id="s-splash">
@@ -179,7 +179,7 @@ body { background: #e8e8e8; display: flex; flex-direction: column; align-items: 
           <div class="udot"></div>
           <div class="eavatar" style="background:#0d5c2e;">G</div>
           <div class="emeta">
-            <div class="esender">GFI &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="10797e767f507776793e7e7564">[email&#160;protected]</a>&gt;</div>
+            <div class="esender">GFI &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aec7c0c8c1eec9c8c780c0cbda">[email&#160;protected]</a>&gt;</div>
             <div class="esubject">Is Your Facility Actually Protected? 🔒</div>
             <div class="epreview">FREE SHIPPING ON ORDERS OVER $500 · 15% OFF with code GFI15</div>
           </div>
@@ -211,7 +211,7 @@ body { background: #e8e8e8; display: flex; flex-direction: column; align-items: 
   <div id="s-email">
     <div class="echrome">
       <div class="eback">‹</div>
-      <div style="flex:1;"><div class="esubj">Is Your Facility Actually Protected?</div><div class="efrom">GFI &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="41282f272e012627286f2f2435">[email&#160;protected]</a>&gt; · Mar 13, 2026, 4:03 AM</div></div>
+      <div style="flex:1;"><div class="esubj">Is Your Facility Actually Protected?</div><div class="efrom">GFI &lt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="70191e161f301716195e1e1504">[email&#160;protected]</a>&gt; · Mar 13, 2026, 4:03 AM</div></div>
       <div style="font-size:14px;color:#5f6368;">⋮</div>
     </div>
     <div class="escroller" id="emailScroller">
@@ -257,7 +257,7 @@ body { background: #e8e8e8; display: flex; flex-direction: column; align-items: 
           <div class="gfi-browse">BROWSE ALL PRODUCTS →</div><br>
           <div class="gfi-trust">🔒 Secure Checkout &nbsp;|&nbsp; Satisfaction Guaranteed &nbsp;|&nbsp; Expert Support</div>
         </div>
-        <div class="gfi-footer"><div class="gfi-flogo">GLOBAL <span>FURNISHINGS</span> INC.</div><div class="gfi-flinks"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6a03040c052a0d0605080b060c1f180403190203040d1903040944090507">[email&#160;protected]</a><br>globalfurnishingsinc.com</div></div>
+        <div class="gfi-footer"><div class="gfi-flogo">GLOBAL <span>FURNISHINGS</span> INC.</div><div class="gfi-flinks"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fe97909891be9992919c9f92988b8c90978d969790998d97909dd09d9193">[email&#160;protected]</a><br>globalfurnishingsinc.com</div></div>
       </div>
     </div>
   </div>
@@ -278,46 +278,62 @@ body { background: #e8e8e8; display: flex; flex-direction: column; align-items: 
   <div class="dot" id="d3"></div>
   <div class="dot" id="d4"></div>
 </div>
-
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-const stepIds = ['s-splash','s-inbox','s-open','s-email','s-end'];
-const dots = [0,1,2,3,4].map(i => document.getElementById('d'+i));
-let current = 0, scrollRaf = null;
+<script>
+var stepIds = ['s-splash','s-inbox','s-open','s-email','s-end'];
+var dots = [];
+for(var i=0;i<5;i++){ dots.push(document.getElementById('d'+i)); }
+var current = 0, scrollRaf = null;
 
 function showStep(n) {
-  stepIds.forEach(id => { document.getElementById(id).style.display = 'none'; });
-  dots.forEach((d,i) => { d.className = 'dot'+(i===n?' active':''); });
-  const el = document.getElementById(stepIds[n]);
-  el.style.display = 'flex';
-  el.style.flexDirection = 'column';
+  for(var i=0;i<stepIds.length;i++){
+    var el=document.getElementById(stepIds[i]);
+    if(el) el.style.display='none';
+  }
+  for(var i=0;i<dots.length;i++){
+    if(dots[i]) dots[i].className='dot'+(i===n?' active':'');
+  }
+  var el=document.getElementById(stepIds[n]);
+  if(!el) return;
+  el.style.display='flex';
+  el.style.flexDirection='column';
   el.classList.remove('fade-in','slide-up');
   void el.offsetWidth;
   el.classList.add(n===0?'fade-in':'slide-up');
-  current = n;
+  current=n;
 }
 
 function autoScroll() {
-  const scroller = document.getElementById('emailScroller');
-  scroller.scrollTop = 0;
-  if (scrollRaf) { cancelAnimationFrame(scrollRaf); scrollRaf = null; }
-  setTimeout(() => {
-    const total = scroller.scrollHeight - scroller.clientHeight;
-    if (total <= 0) { setTimeout(() => showStep(4), 500); return; }
-    const duration = 12000;
-    let startTime = null, lastPos = 0;
-    function tick(ts) {
-      if (!startTime) startTime = ts;
-      const p = Math.min((ts - startTime) / duration, 1);
-      const pos = Math.floor(p * total);
-      if (pos >= lastPos) { scroller.scrollTop = pos; lastPos = pos; }
-      if (p < 1) { scrollRaf = requestAnimationFrame(tick); }
-      else { scroller.scrollTop = total; scrollRaf = null; setTimeout(() => showStep(4), 800); }
+  var scroller=document.getElementById('emailScroller');
+  if(!scroller){ setTimeout(runSequence, 2000); return; }
+  scroller.scrollTop=0;
+  if(scrollRaf){ cancelAnimationFrame(scrollRaf); scrollRaf=null; }
+  setTimeout(function(){
+    var total=scroller.scrollHeight-scroller.clientHeight;
+    if(total<=0){ setTimeout(runSequence,2000); return; }
+    var duration=10000, startTime=null, lastPos=0;
+    function tick(ts){
+      if(!startTime) startTime=ts;
+      var p=Math.min((ts-startTime)/duration,1);
+      var pos=Math.floor(p*total);
+      if(pos>=lastPos){ scroller.scrollTop=pos; lastPos=pos; }
+      if(p<1){ scrollRaf=requestAnimationFrame(tick); }
+      else{ scroller.scrollTop=total; scrollRaf=null; showStep(4); setTimeout(runSequence,2000); }
     }
-    scrollRaf = requestAnimationFrame(tick);
-  }, 400);
+    scrollRaf=requestAnimationFrame(tick);
+  },400);
 }
 
-function runSequence() {
-  if (scrollRaf) { cancelAnimationFrame(scrollRaf); scrollRaf = null; }
+function runSequence(){
+  if(scrollRaf){ cancelAnimationFrame(scrollRaf); scrollRaf=null; }
   showStep(0);
-  setTimeout(() => showStep(1), 1600
+  setTimeout(function(){ showStep(1);
+    setTimeout(function(){ showStep(2);
+      setTimeout(function(){ showStep(3); autoScroll(); },1200);
+    },1800);
+  },1600);
+}
+
+window.onload=runSequence;
+</script>
+</body>
+</html>
