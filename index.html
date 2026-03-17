@@ -150,7 +150,7 @@ body.hov #cur{width:13px;height:13px}body.hov #ring{width:50px;height:50px;borde
 .sccm-sub{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);line-height:1.7}
 .pc{display:block;background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform .4s var(--eo),border-color .3s,box-shadow .35s;cursor:default}
 .pc-img{height:168px;overflow:hidden;background:var(--bg4)}
-.pc-img img{width:100%;height:100%;object-fit:cover}
+.pc-img img{width:100%;height:100%;object-fit:contain;transition:transform .4s var(--eo)}
 .pc-body{padding:15px 17px}
 .pc-tag{font-size:.57rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
 .pc-name{font-family:"Bebas Neue",sans-serif;font-size:1.05rem;color:var(--white)}
@@ -168,8 +168,17 @@ body.hov #cur{width:13px;height:13px}body.hov #ring{width:50px;height:50px;borde
 .seobef{position:absolute;left:0;top:0;height:100%;background:rgba(255,255,255,.12);border-radius:3px}
 .seoaft{position:absolute;left:0;top:0;height:100%;background:var(--green);border-radius:3px;width:0;transition:width 1.3s var(--eo)}.seoaft.on{width:var(--w)}
 .seoscr{font-family:"Bebas Neue",sans-serif;font-size:.95rem;color:var(--green);width:34px;text-align:right;flex-shrink:0}
-.dmosaic{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.dmosaic .pc:first-child{grid-column:1/-1}.dmosaic .pc:first-child .pc-img{height:210px}
+.dmosaic{display:grid;gap:12px}
+.dmosaic[data-count="1"]{grid-template-columns:1fr}
+.dmosaic[data-count="2"]{grid-template-columns:1fr 1fr}
+.dmosaic[data-count="3"]{grid-template-columns:1fr 1fr}
+.dmosaic[data-count="4"]{grid-template-columns:1fr 1fr}
+.dmosaic[data-count="3"] .pc:first-child{grid-column:1/-1}
+.dmosaic[data-count="1"] .pc-img{height:340px}
+.dmosaic[data-count="2"] .pc-img{height:280px}
+.dmosaic[data-count="3"] .pc:first-child .pc-img{height:240px}
+.dmosaic[data-count="3"] .pc-img{height:200px}
+.dmosaic[data-count="4"] .pc-img{height:200px}
 .vlist{display:flex;flex-direction:column;gap:12px}
 .vc{display:flex;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .3s,transform .3s var(--eo);cursor:none;text-decoration:none}
 .vc:hover{border-color:rgba(255,209,102,.2);transform:translateX(6px)}
@@ -256,7 +265,26 @@ body.hov #cur{width:13px;height:13px}body.hov #ring{width:50px;height:50px;borde
   .techstack{gap:6px}.tbadge{font-size:.6rem;padding:5px 12px}
   .emwrap{max-width:100%}
 }
+
+/* LIGHTBOX */
+.lb-overlay{display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.92);align-items:center;justify-content:center;cursor:zoom-out}
+.lb-overlay.open{display:flex}
+.lb-img{max-width:90vw;max-height:88vh;object-fit:contain;border-radius:8px;box-shadow:0 24px 80px rgba(0,0,0,.8)}
+.lb-close{position:absolute;top:20px;right:24px;color:#fff;font-size:2rem;background:none;border:none;cursor:pointer;opacity:.7;transition:opacity .2s;line-height:1}
+.lb-close:hover{opacity:1}
+.pc-design{cursor:zoom-in}
+.pc-design:hover .pc-img img{transform:scale(1.04)}
 </style>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D8DNE7C21P"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D8DNE7C21P');
+</script>
+<!-- End Google Analytics -->
 </head>
 <body>
 <div class="noise"></div>
@@ -444,13 +472,15 @@ body.hov #cur{width:13px;height:13px}body.hov #ring{width:50px;height:50px;borde
         <div class="ctrows rv" id="ctrows" style="transition-delay:.2s"></div>
       </div>
       <div class="rvr" style="transition-delay:.15s">
-        <div class="form">
+        <form class="form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contact">
+          <input type="hidden" name="bot-field" style="display:none">
           <div class="frow2">
-            <div class="fg"><label>Your Name</label><input type="text" placeholder="John Smith"></div>
-            <div class="fg"><label>Email</label><input type="email" placeholder="john@company.com"></div>
+            <div class="fg"><label>Your Name</label><input type="text" name="name" placeholder="John Smith" required></div>
+            <div class="fg"><label>Email</label><input type="email" name="email" placeholder="john@company.com" required></div>
           </div>
           <div class="fg"><label>Service Needed</label>
-            <select>
+            <select name="service">
               <option value="">Select a service&hellip;</option>
               <option>CMS Website Build</option>
               <option>Technical &amp; On-Page SEO</option>
@@ -461,9 +491,9 @@ body.hov #cur{width:13px;height:13px}body.hov #ring{width:50px;height:50px;borde
               <option>Other</option>
             </select>
           </div>
-          <div class="fg"><label>Project Details</label><textarea placeholder="Describe your project &mdash; platform, goals, timeline, and budget if possible."></textarea></div>
-          <button class="btnsend" id="sendbtn">Send Message &rarr;</button>
-        </div>
+          <div class="fg"><label>Project Details</label><textarea name="message" placeholder="Describe your project &mdash; platform, goals, timeline, and budget if possible."></textarea></div>
+          <button type="submit" class="btnsend" id="sendbtn">Send Message &rarr;</button>
+        </form>
       </div>
     </div>
   </div>
@@ -606,14 +636,19 @@ loadJ('data/seo.json',function(d){
 
 // GRAPHIC DESIGN
 loadJ('data/graphic-design.json',function(d){
-  var mosaic=document.getElementById('dmosaic'),h='';
-  d.items.forEach(function(p,i){
-    h+='<div class="pc">'
-        +'<div class="pc-img"><img src="'+p.img+'" alt="'+p.name+'" loading="lazy"></div>'
-        +'<div class="pc-body"><div class="pc-tag">'+p.tag+'</div><div class="pc-name">'+p.name+'</div></div>'
-      +'</div>';
+  var mosaic=document.getElementById('dmosaic');
+  if(!mosaic)return;
+  mosaic.setAttribute('data-count',String(d.items.length));
+  d.items.forEach(function(p){
+    var card=document.createElement('div');
+    card.className='pc pc-design';
+    card.dataset.img=p.img;
+    card.dataset.name=p.name;
+    card.addEventListener('click',function(){openLB(this.dataset.img,this.dataset.name);});
+    card.innerHTML='<div class="pc-img"><img src="'+p.img+'" alt="'+p.name+'" loading="lazy"></div>'
+      +'<div class="pc-body"><div class="pc-tag">'+p.tag+'</div><div class="pc-name">'+p.name+'</div></div>';
+    mosaic.appendChild(card);
   });
-  mosaic.innerHTML=h;
 });
 
 // VIDEOS - direct links, no modal
@@ -697,7 +732,7 @@ loadJ('data/experience.json',function(d){
 
 // CONTACT
 loadJ('data/contact.json',function(d){
-  document.getElementById('sendbtn').onclick=function(){location.href='mailto:'+d.email;};
+  // Form submits to Netlify natively
   document.getElementById('ctrows').innerHTML=
     '<a href="mailto:'+d.email+'" class="ctrow"><div class="ctico">&#9993;</div><div><span class="ctlbl">Email</span><span class="cttxt">'+d.email+'</span></div></a>'
    +'<a href="tel:'+d.phone.replace(/\s/g,'')+'" class="ctrow"><div class="ctico">&#128241;</div><div><span class="ctlbl">Phone</span><span class="cttxt">'+d.phone+'</span></div></a>'
@@ -711,9 +746,28 @@ loadJ('data/contact.json',function(d){
   document.getElementById('fsocs').querySelectorAll('.fsoc').forEach(hov);
 });
 
+// LIGHTBOX
+function openLB(src,alt){
+  document.getElementById('lb-img').src=src;
+  document.getElementById('lb-img').alt=alt||'';
+  document.getElementById('lb-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLB(){
+  document.getElementById('lb-overlay').classList.remove('open');
+  document.getElementById('lb-img').src='';
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLB();});
+
 observe();
 </script>
 
+
+<div class="lb-overlay" id="lb-overlay" onclick="closeLB()">
+  <button class="lb-close" onclick="closeLB()">&times;</button>
+  <img class="lb-img" id="lb-img" src="" alt="">
+</div>
 <textarea id="email-srcdoc" style="display:none" aria-hidden="true"><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -860,7 +914,26 @@ body { background: #e8e8e8; display: flex; flex-direction: column; align-items: 
 .slide-up { animation:slideUp 0.25s ease forwards; }
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 @keyframes slideUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* LIGHTBOX */
+.lb-overlay{display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.92);align-items:center;justify-content:center;cursor:zoom-out}
+.lb-overlay.open{display:flex}
+.lb-img{max-width:90vw;max-height:88vh;object-fit:contain;border-radius:8px;box-shadow:0 24px 80px rgba(0,0,0,.8)}
+.lb-close{position:absolute;top:20px;right:24px;color:#fff;font-size:2rem;background:none;border:none;cursor:pointer;opacity:.7;transition:opacity .2s;line-height:1}
+.lb-close:hover{opacity:1}
+.pc-design{cursor:zoom-in}
+.pc-design:hover .pc-img img{transform:scale(1.04)}
 </style>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D8DNE7C21P"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D8DNE7C21P');
+</script>
+<!-- End Google Analytics -->
 </head>
 <body>
 <div class="scene" id="mainScene">
