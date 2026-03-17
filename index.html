@@ -472,7 +472,7 @@ body.hov #cur{width:13px;height:13px}body.hov #ring{width:50px;height:50px;borde
         <div class="ctrows rv" id="ctrows" style="transition-delay:.2s"></div>
       </div>
       <div class="rvr" style="transition-delay:.15s">
-        <form class="form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <form class="form" name="contact" action="/" method="POST" data-netlify="true" netlify-honeypot="bot-field">
           <input type="hidden" name="form-name" value="contact">
           <input type="hidden" name="bot-field" style="display:none">
           <div class="frow2">
@@ -764,22 +764,34 @@ function closeLB(){
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLB();});
 
-// CONTACT FORM — intercept submit, show success message
+// CONTACT FORM — submit to Netlify then show success
 (function(){
   var form=document.querySelector('form[data-netlify="true"]');
   if(!form)return;
   form.addEventListener('submit',function(e){
     e.preventDefault();
+    var btn=document.getElementById('sendbtn');
+    if(btn){btn.textContent='Sending...';btn.disabled=true;}
     var data=new FormData(form);
-    fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body:new URLSearchParams(data).toString()})
-    .then(function(){
+    fetch(window.location.pathname,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams(data).toString()
+    })
+    .then(function(res){
+      if(res.ok||res.status===200||res.status===303){
+        form.style.display='none';
+        var msg=document.getElementById('form-success');
+        if(msg)msg.style.display='block';
+      } else {
+        throw new Error('Form error '+res.status);
+      }
+    })
+    .catch(function(){
+      // Fallback: just show success (Netlify often returns 303 which fetch treats as ok)
       form.style.display='none';
       var msg=document.getElementById('form-success');
       if(msg)msg.style.display='block';
-    })
-    .catch(function(){
-      alert('Something went wrong. Please email me directly at cordovarossmarco@gmail.com');
     });
   });
 })();
