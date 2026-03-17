@@ -494,6 +494,10 @@ body.hov #cur{width:13px;height:13px}body.hov #ring{width:50px;height:50px;borde
           <div class="fg"><label>Project Details</label><textarea name="message" placeholder="Describe your project &mdash; platform, goals, timeline, and budget if possible."></textarea></div>
           <button type="submit" class="btnsend" id="sendbtn">Send Message &rarr;</button>
         </form>
+        <div id="form-success" style="display:none;margin-top:20px;padding:18px 22px;background:rgba(184,255,87,.06);border:1px solid rgba(184,255,87,.25);border-radius:12px">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--green);margin-bottom:6px">Message Sent! ✓</div>
+          <div style="font-size:.82rem;color:#aaa;line-height:1.7">Thanks for reaching out — I'll get back to you within 24 hours.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -759,6 +763,26 @@ function closeLB(){
   document.body.style.overflow='';
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLB();});
+
+// CONTACT FORM — intercept submit, show success message
+(function(){
+  var form=document.querySelector('form[data-netlify="true"]');
+  if(!form)return;
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var data=new FormData(form);
+    fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams(data).toString()})
+    .then(function(){
+      form.style.display='none';
+      var msg=document.getElementById('form-success');
+      if(msg)msg.style.display='block';
+    })
+    .catch(function(){
+      alert('Something went wrong. Please email me directly at cordovarossmarco@gmail.com');
+    });
+  });
+})();
 
 observe();
 </script>
