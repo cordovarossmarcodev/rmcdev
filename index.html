@@ -1087,26 +1087,16 @@ body { background: #e8e8e8; display: flex; flex-direction: column; align-items: 
     </div>
   </div>
 
-  <div id="s-end">
-    <div class="end-check"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 11l4 4 8-8" stroke="#4a7a1e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    <div class="end-title">Full email sequence complete</div>
-    <div class="end-sub">Ready to screen-record for GIF export</div>
-    <button class="replay-btn" id="replayBtn">↺ Replay animation</button>
-  </div>
-
-</div>
-
 <div class="progress-dots">
   <div class="dot active" id="d0"></div>
   <div class="dot" id="d1"></div>
   <div class="dot" id="d2"></div>
   <div class="dot" id="d3"></div>
-  <div class="dot" id="d4"></div>
 </div>
 <script>
-var stepIds = ['s-splash','s-inbox','s-open','s-email','s-end'];
+var stepIds = ['s-splash','s-inbox','s-open','s-email'];
 var dots = [];
-for(var i=0;i<5;i++){ dots.push(document.getElementById('d'+i)); }
+for(var i=0;i<4;i++){ dots.push(document.getElementById('d'+i)); }
 var current = 0, scrollRaf = null;
 
 function showStep(n) {
@@ -1142,7 +1132,7 @@ function autoScroll() {
       var pos=Math.floor(p*total);
       if(pos>=lastPos){ scroller.scrollTop=pos; lastPos=pos; }
       if(p<1){ scrollRaf=requestAnimationFrame(tick); }
-      else{ scroller.scrollTop=total; scrollRaf=null; showStep(4); setTimeout(runSequence,1800); }
+      else{ scroller.scrollTop=total; scrollRaf=null; setTimeout(runSequence,800); }
     }
     scrollRaf=requestAnimationFrame(tick);
   },400);
